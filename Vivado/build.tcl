@@ -65,11 +65,12 @@ if {[string equal [get_filesets -quiet sources_1] ""]} {
 # Set 'sources_1' fileset object
 set obj [get_filesets sources_1]
 set files [list \
-"[file normalize "$origin_dir/src/hdl/traffic_light.v"]"\
+"[file normalize "$origin_dir/src/hdl/traffic_light_top.v"]"\
+"[file normalize "$origin_dir/src/hdl/two_way_intersection.v"]"\
 ]
 add_files -norecurse -fileset $obj $files
 set obj [get_filesets sources_1]
-set_property -name "top" -value "traffic_light" -objects $obj
+set_property -name "top" -value "traffic_light_top" -objects $obj
 
 # Create 'constrs_1' fileset (if not found)
 if {[string equal [get_filesets -quiet constrs_1] ""]} {
@@ -77,6 +78,11 @@ if {[string equal [get_filesets -quiet constrs_1] ""]} {
 }
 
 # Set 'constrs_1' fileset object
+set obj [get_filesets constrs_1]
+set files [list \
+"[file normalize "$origin_dir/src/xdc/board_io.xdc"]"\
+]
+add_files -norecurse -fileset $obj $files
 set obj [get_filesets constrs_1]
 
 # Add constraint files

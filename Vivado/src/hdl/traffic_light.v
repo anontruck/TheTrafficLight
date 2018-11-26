@@ -8,7 +8,6 @@ module traffic_light(
 	reg north_ped, west_ped = 'b00;
 	reg R1,Y1,G1,R2,Y2,G2 = 'b100100;
 	
-	
 	assign {R1out,Y1out,G1out}={R1,Y1,G1};
 	assign {R2out,Y2out,G2out}={R2,Y2,G2};
 	
@@ -17,7 +16,7 @@ module traffic_light(
 		timer = timer+1;
 		case (state)
 			0: 
-			begin
+			begin // GREEN 0
 				{R1,Y1,G1}='b001;
 				{R2,Y2,G2}='b100;
 				if (north_ped & (timer <= 10))
@@ -29,14 +28,14 @@ module traffic_light(
 					state = 1;
 			end
 			1: 
-			begin
+			begin // YELLOW 0
 				{R1,Y1,G1}='b010;
 				{R2,Y2,G2}='b100;
 				if (timer >=23)
 					state = 2;
 			end
 			2: 
-			begin
+			begin // RED 0
 				{R1,Y1,G1}='b100;
 				{R2,Y2,G2}='b100;
 				if (timer >=25)
