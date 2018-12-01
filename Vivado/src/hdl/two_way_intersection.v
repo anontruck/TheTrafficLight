@@ -1,5 +1,4 @@
 module two_way_intersection(
-    output  wire debug,
     output  wire red_0,             // output for red light on light0
     output  wire ylw_0,             // output for yle light on light0
     output  wire grn_0,             // output for grn light on light0
@@ -32,7 +31,7 @@ localparam YLW_MSK = 'b010;
 localparam GRN_MSK = 'b001;
 
 // ----- clock setup -----
-parameter N = 21;                   // clock prescale
+parameter N = 22;                   // clock prescale
 reg [N+1:0] clk_mod = 'b0;          // internal module clock
 
 // ----- local registers -----
@@ -117,8 +116,5 @@ assign {red_1, ylw_1, grn_1} = light1;
 
 // the clock block
 always @ (posedge clk) clk_mod <= clk_mod + 1;
-
-// TODO for debug
-assign debug = clk_mod[N+1];
 
 endmodule

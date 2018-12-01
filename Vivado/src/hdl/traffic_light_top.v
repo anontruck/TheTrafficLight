@@ -20,7 +20,6 @@
 
 
 module traffic_light_top(
-    output  wire debug,
     output  wire red_0,             // output for red light on light0
     output  wire ylw_0,             // output for yle light on light0
     output  wire grn_0,             // output for grn light on light0
@@ -34,7 +33,6 @@ module traffic_light_top(
 );
 
 two_way_intersection two_way(
-    .debug(debug),
     .red_0(red_0),
     .ylw_0(ylw_0),
     .grn_0(grn_0),
