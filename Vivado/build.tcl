@@ -69,6 +69,7 @@ set files [list \
 "[file normalize "$origin_dir/src/hdl/two_way_intersection.v"]"\
 "[file normalize "$origin_dir/src/hdl/debounce.v"]"\
 "[file normalize "$origin_dir/src/hdl/master_timer.v"]"\
+"[file normalize "$origin_dir/src/hdl/crosswalk.v"]"\
 ]
 add_files -norecurse -fileset $obj $files
 set obj [get_filesets sources_1]

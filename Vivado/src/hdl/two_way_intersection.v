@@ -35,7 +35,7 @@ localparam RED_TON = 2;
 localparam T_CYCLE = GRN_TON + YLW_TON + RED_TON; // cycle time
 localparam SLOWDOWN = 10;
 // light assignment masks
-localparam ALL_OFF = 'b000;
+localparam OFF_MSK = 'b000;
 localparam RED_MSK = 'b100;
 localparam YLW_MSK = 'b010;
 localparam GRN_MSK = 'b001;
@@ -54,18 +54,18 @@ reg [2:0] lightb_1  = 'b0;
 // ----- state machine -----
 always @(posedge clk or posedge reset_n) begin
     if (reset_n) begin         // reset
-        lighta_0    <= 3'b0;
-        lighta_1    <= 3'b0;
-        state_a     <= 4'b0;
+        lighta_0    <= OFF_MSK;
+        lighta_1    <= OFF_MSK;
+        state_a     <= STATE_GRN_RED;
         timer       <= 7'b0;
     end else begin              // state machine
         timer <= timer + 1;
-        case (state_b)
+        case (state_a)
             STATE_GRN_RED : begin
                 lighta_0 <= GRN_MSK;
                 lighta_1 <= RED_MSK;
                 if (!crosswalk_0 && (timer <= SLOWDOWN) && (timer >= SHIFT)) begin
-                    //timer <= (timer + SLOWDOWN);
+                    timer <= (timer + SLOWDOWN);
                 end else if (timer >= GRN_TON) begin
                     state_a <= STATE_YLW_RED;
                 end
@@ -88,7 +88,7 @@ always @(posedge clk or posedge reset_n) begin
                 lighta_0 <= RED_MSK;
                 lighta_1 <= GRN_MSK;
                 if (!crosswalk_1 && (timer <= (T_CYCLE + SLOWDOWN)) && (timer >= T_CYCLE)) begin
-                    //timer <= (timer + SLOWDOWN);
+                    timer <= (timer + SLOWDOWN);
                 end else if (timer >= (T_CYCLE + GRN_TON)) begin
                     state_a <= STATE_RED_YLW;
                 end
@@ -120,9 +120,9 @@ end
 
 always @ (posedge clk or posedge reset_n) begin
     if (reset_n) begin
-        lightb_0    <= 3'b0;
-        lightb_1    <= 3'b0;
-        state_b     <= 4'b0;
+        lightb_0    <= OFF_MSK;
+        lightb_1    <= OFF_MSK;
+        state_b     <= STATE_GRN_RED;
     end else begin
         case (state_b)
             STATE_GRN_RED : begin
@@ -174,6 +174,7 @@ always @ (posedge clk or posedge reset_n) begin
         endcase
     end
 end 
+
 assign {reda_0, ylwa_0, grna_0} = lighta_0;
 assign {reda_1, ylwa_1, grna_1} = lighta_1;
 assign {redb_0, ylwb_0, grnb_0} = lightb_0;
