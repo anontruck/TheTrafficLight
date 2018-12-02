@@ -38,28 +38,28 @@ set_property IOSTANDARD LVCMOS33 [get_ports ylw_light_west_s11th_st]
 set_property PACKAGE_PIN K3 [get_ports grn_light_west_s11th_st]
 set_property IOSTANDARD LVCMOS33 [get_ports grn_light_west_s11th_st]
 
-set_property PACKAGE_PIN L1 [get_ports walk_light_west_s10th_st]
+set_property PACKAGE_PIN P17 [get_ports walk_light_west_s10th_st]
 set_property IOSTANDARD LVCMOS33 [get_ports walk_light_west_s10th_st]
 
-set_property PACKAGE_PIN P1 [get_ports stop_light_west_s10th_st]
+set_property PACKAGE_PIN N17 [get_ports stop_light_west_s10th_st]
 set_property IOSTANDARD LVCMOS33 [get_ports stop_light_west_s10th_st]
 
-set_property PACKAGE_PIN N3 [get_ports walk_light_nrth_s10th_st]
+set_property PACKAGE_PIN R18 [get_ports walk_light_nrth_s10th_st]
 set_property IOSTANDARD LVCMOS33 [get_ports walk_light_nrth_s10th_st]
 
-set_property PACKAGE_PIN V13 [get_ports stop_light_nrth_s10th_st]
+set_property PACKAGE_PIN P18 [get_ports stop_light_nrth_s10th_st]
 set_property IOSTANDARD LVCMOS33 [get_ports stop_light_nrth_s10th_st]
 
-set_property PACKAGE_PIN P3 [get_ports walk_light_west_s11th_st]
+set_property PACKAGE_PIN M19 [get_ports walk_light_west_s11th_st]
 set_property IOSTANDARD LVCMOS33 [get_ports walk_light_west_s11th_st]
 
-set_property PACKAGE_PIN U3 [get_ports stop_light_west_s11th_st]
+set_property PACKAGE_PIN M18 [get_ports stop_light_west_s11th_st]
 set_property IOSTANDARD LVCMOS33 [get_ports stop_light_west_s11th_st]
 
-set_property PACKAGE_PIN W3 [get_ports walk_light_nrth_s11th_st]
+set_property PACKAGE_PIN L17 [get_ports walk_light_nrth_s11th_st]
 set_property IOSTANDARD LVCMOS33 [get_ports walk_light_nrth_s11th_st]
 
-set_property PACKAGE_PIN V3 [get_ports stop_light_nrth_s11th_st]
+set_property PACKAGE_PIN K17 [get_ports stop_light_nrth_s11th_st]
 set_property IOSTANDARD LVCMOS33 [get_ports stop_light_nrth_s11th_st]
 
 set_property PACKAGE_PIN U16 [get_ports debug_out]
