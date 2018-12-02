@@ -11,6 +11,14 @@ module two_way_intersection(
     output  wire redb_1,             // output for red light on light1
     output  wire ylwb_1,             // output for ylw light on light1
     output  wire grnb_1,             // output for grn light on light1
+    output  wire walka_0,
+    output  wire stopa_0,
+    output  wire walka_1,
+    output  wire stopa_1,
+    output  wire walkb_0,
+    output  wire stopb_0,
+    output  wire walkb_1,
+    output  wire stopb_1,
     input   wire crosswalk_0,       // request from north crosswalk
     input   wire crosswalk_1,       // request from west crosswalk
     input   wire reset_n,           // active low reset
@@ -18,6 +26,7 @@ module two_way_intersection(
 );
 
 parameter SHIFT = 4;
+
 
 // ----- local constants -----
 
@@ -50,6 +59,48 @@ reg [2:0] lighta_0  = 'b0;       // GYR = 3'b000
 reg [2:0] lighta_1  = 'b0;       // GYR = 3'b000
 reg [2:0] lightb_0  = 'b0;
 reg [2:0] lightb_1  = 'b0;
+
+assign not_cross_0 = ~crosswalk_0;
+assign not_cross_1 = ~crosswalk_1;
+
+//crosswalk light module instances
+crosswalk crossa_0(
+    .walk_light(walka_0),
+    .stop_light(stopa_0),
+    .red_trffc_light(reda_0),
+    .ylw_trffc_light(ylwa_0),
+    .grn_trffc_light(grna_0),
+    .cross_button(not_cross_0),
+    .clk(clk)
+);
+crosswalk crossa_1(
+    .walk_light(walka_1),
+    .stop_light(stopa_1),
+    .red_trffc_light(reda_1),
+    .ylw_trffc_light(ylwa_1),
+    .grn_trffc_light(grna_1),
+    .cross_button(not_cross_1),
+    .clk(clk)
+);
+
+crosswalk crossb_0(
+    .walk_light(walkb_0),
+    .stop_light(stopb_0),
+    .red_trffc_light(redb_0),
+    .ylw_trffc_light(ylwb_0),
+    .grn_trffc_light(grnb_0),
+    .cross_button(not_cross_0),
+    .clk(clk)
+);
+crosswalk crossb_1(
+    .walk_light(walkb_1),
+    .stop_light(stopb_1),
+    .red_trffc_light(redb_1),
+    .ylw_trffc_light(ylwb_1),
+    .grn_trffc_light(grnb_1),
+    .cross_button(not_cross_1),
+    .clk(clk)
+);
 
 // ----- state machine -----
 always @(posedge clk or posedge reset_n) begin
