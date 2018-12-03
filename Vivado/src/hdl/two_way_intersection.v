@@ -11,6 +11,8 @@ module two_way_intersection(
     output  wire redb_1,             // output for red light on light1
     output  wire ylwb_1,             // output for ylw light on light1
     output  wire grnb_1,             // output for grn light on light1
+    output  wire debug_10n_q,// DEBUG
+    output  wire debug_10w_q,// DEBUG
     output  wire walka_0,
     output  wire stopa_0,
     output  wire walka_1,
@@ -19,10 +21,10 @@ module two_way_intersection(
     output  wire stopb_0,
     output  wire walkb_1,
     output  wire stopb_1,
-    input   wire crosswalk_0,       // request from north crosswalk
-    input   wire crosswalk_1,       // request from west crosswalk
-    input   wire reset_n,           // active low reset
-    input   wire clk                // posedge trigger
+    input crosswalk_0,              // request from north crosswalk
+    input crosswalk_1,              // request from west crosswalk
+    input reset_n,                  // active low reset
+    input clk                       // posedge trigger
 );
 
 parameter SHIFT = 4;
@@ -60,47 +62,77 @@ reg [2:0] lighta_1  = 'b0;       // GYR = 3'b000
 reg [2:0] lightb_0  = 'b0;
 reg [2:0] lightb_1  = 'b0;
 
-assign not_cross_0 = ~crosswalk_0;
-assign not_cross_1 = ~crosswalk_1;
+reg crossing_0_flag;
+reg crossing_1_flag;
+
+wire cross_rqst_a_0;
+wire cross_rqst_a_1;
+wire cross_rqst_b_0;
+wire cross_rqst_b_1;
+wire not_cross_0;
+wire not_cross_1;
+wire cross_0_rqst;
+wire cross_1_rqst;
 
 //crosswalk light module instances
 crosswalk crossa_0(
     .walk_light(walka_0),
     .stop_light(stopa_0),
+    .debug_q(debug_10n_q),
+    .cross_rqst(cross_rqst_a_0),
     .red_trffc_light(reda_0),
     .ylw_trffc_light(ylwa_0),
     .grn_trffc_light(grna_0),
-    .cross_button(not_cross_0),
+//    .cross_button(not_cross_0),
+    .cross_button(crosswalk_0),
+    .reset(reset_n),
     .clk(clk)
 );
 crosswalk crossa_1(
     .walk_light(walka_1),
     .stop_light(stopa_1),
+//    .debug_q(debug_10w_q),
+    .cross_rqst(cross_rqst_a_1),
     .red_trffc_light(reda_1),
     .ylw_trffc_light(ylwa_1),
     .grn_trffc_light(grna_1),
-    .cross_button(not_cross_1),
+//    .cross_button(not_cross_1),
+    .cross_button(crosswalk_1),
+    .reset(reset_n),
     .clk(clk)
 );
 
 crosswalk crossb_0(
     .walk_light(walkb_0),
     .stop_light(stopb_0),
+    .cross_rqst(cross_rqst_b_0),
     .red_trffc_light(redb_0),
     .ylw_trffc_light(ylwb_0),
     .grn_trffc_light(grnb_0),
-    .cross_button(not_cross_0),
+//    .cross_button(not_cross_0),
+    .cross_button(crosswalk_0),
+    .reset(reset_n),
     .clk(clk)
 );
 crosswalk crossb_1(
     .walk_light(walkb_1),
     .stop_light(stopb_1),
+    .cross_rqst(cross_rqst_b_1),
     .red_trffc_light(redb_1),
     .ylw_trffc_light(ylwb_1),
     .grn_trffc_light(grnb_1),
-    .cross_button(not_cross_1),
+//    .cross_button(not_cross_1),
+    .cross_button(crosswalk_1),
+    .reset(reset_n),
     .clk(clk)
 );
+
+assign debug_10w_q = crosswalk_0;
+
+//assign not_cross_0 = ~crosswalk_0;
+//assign not_cross_1 = ~crosswalk_1;
+assign cross_0_rqst = ~cross_rqst_a_0;
+assign cross_1_rqst = cross_rqst_a_1 || cross_rqst_b_1;
 
 // ----- state machine -----
 always @(posedge clk or posedge reset_n) begin
@@ -116,6 +148,7 @@ always @(posedge clk or posedge reset_n) begin
                 lighta_0 <= GRN_MSK;
                 lighta_1 <= RED_MSK;
                 if (!crosswalk_0 && (timer <= SLOWDOWN) && (timer >= SHIFT)) begin
+//                if (cross_0_rqst && (timer <= SLOWDOWN) && (timer >= SHIFT)) begin
                     timer <= (timer + SLOWDOWN);
                 end else if (timer >= GRN_TON) begin
                     state_a <= STATE_YLW_RED;
@@ -139,6 +172,7 @@ always @(posedge clk or posedge reset_n) begin
                 lighta_0 <= RED_MSK;
                 lighta_1 <= GRN_MSK;
                 if (!crosswalk_1 && (timer <= (T_CYCLE + SLOWDOWN)) && (timer >= T_CYCLE)) begin
+//                if (cross_1_rqst && (timer <= (T_CYCLE + SLOWDOWN)) && (timer >= T_CYCLE)) begin
                     timer <= (timer + SLOWDOWN);
                 end else if (timer >= (T_CYCLE + GRN_TON)) begin
                     state_a <= STATE_RED_YLW;

@@ -16,7 +16,7 @@ initial begin
 end
 
 always @(posedge clk_50_mhz) begin
-   if(!enable_n) begin
+   if(enable_n) begin
       if(counter >= COUNT) begin
          counter <= 0;
          clk_out <= ~clk_out;

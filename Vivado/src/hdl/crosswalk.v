@@ -22,20 +22,26 @@
 module crosswalk(
     output wire walk_light,
     output wire stop_light,
-    input wire red_trffc_light,
-    input wire ylw_trffc_light,
-    input wire grn_trffc_light,
-    input wire cross_button,
-    input wire clk
+    output wire cross_rqst,
+    output wire debug_q,
+    input red_trffc_light,
+    input ylw_trffc_light,
+    input grn_trffc_light,
+    input cross_button,
+    input reset,
+    input clk
 );
 
 // ----- local registers -----
 reg [7:0] timer     = 'b0;
-reg [3:0] state     = 'b0;
+reg [2:0] state     = 'b0;
 reg [1:0] light     = 'b0;       // WR = 2'b000
 reg       Q         = 'b0;
-reg   green_edge    = 'b0;
-reg   clear_edge    = 'b0;
+reg blink_red       = 'b0;
+reg blink_flag      = 'b0;
+reg white_flag      = 'b0;
+reg useless1        = 'b0;
+reg useless2        = 'b0;
 
 // pedestrian light time parameters
 localparam WALK_TIME = 10;
@@ -44,64 +50,94 @@ localparam WALK_TIME = 10;
 localparam STATE_RED        = 0;
 localparam STATE_WHITE      = 1;
 localparam STATE_BLINK_RED  = 2;
+localparam STATE_ERROR      = 3;
+
+assign debug_q = Q;
 
 // ----- state machine -----
-always @(posedge clk or posedge red_trffc_light) begin
-    if(red_trffc_light) begin
-        light <= 2'b01;
-        clear_edge <= 'b1;
+always @(posedge blink_flag or posedge red_trffc_light or posedge ylw_trffc_light or posedge grn_trffc_light or posedge reset) begin
+    if (reset) begin // always go directly to red on red lights
         state <= STATE_RED;
-    end
-    else begin
-        case(state)
-            STATE_RED: begin
-                light <= 2'b01;
-                clear_edge <= 'b0;
-                if (cross_button) begin
-                    Q <= 'b1;
-                end
-                if (green_edge && Q) begin
-                    timer <= 'b0;
-                    Q <= 'b0;
-                    clear_edge <= 'b1;
-                    state <= STATE_WHITE;
-                end
-                end
-            STATE_WHITE: begin
-                light <= 2'b10;
-                clear_edge <= 'b0;
-                timer <= timer + 1;
-                if (timer > WALK_TIME) begin
-                    light <= 2'b00;
-                    clear_edge <= 'b1;
-                    state <= STATE_BLINK_RED;
-                end
-                end
-            STATE_BLINK_RED: begin
-                light <= light ^ 2'b01;
-                clear_edge <= 'b0;
-                if(ylw_trffc_light) begin
-                    clear_edge <= 'b1;
-                    state <= STATE_RED;
-                end
-                end
-            default: begin
-                light <= 2'b01;
+        white_flag <= 1;
+    end else if (red_trffc_light) begin
+        state <= STATE_RED;
+    end else begin
+        if (blink_flag) begin           // check if time to start blinking stop
+            if (state == STATE_WHITE) begin
+                white_flag <= 0;
+                state <= STATE_BLINK_RED;
+            end else begin
+                state <= (state == STATE_RED) ? STATE_RED : STATE_BLINK_RED;
+            end
+        end else if (grn_trffc_light) begin
+            if (state == STATE_RED) begin
+                state <= (Q) ? STATE_WHITE : STATE_RED;
+            end else begin
+                state <= (state == STATE_WHITE) ? STATE_WHITE : STATE_BLINK_RED;
+            end
+        end else if (ylw_trffc_light) begin
+            white_flag <= 1;
+            if (state == STATE_BLINK_RED) begin
                 state <= STATE_RED;
-                Q <= 'b0;
+            end else begin
+                state <= (state == STATE_RED) ? STATE_RED : STATE_ERROR;
+            end
+        end else begin
+            state <= STATE_ERROR;
+        end
+    end
+end
+
+always @(negedge cross_button or negedge white_flag) begin
+    if (!white_flag) begin
+        Q <= 0;
+    end else if (!cross_button) begin
+        Q <= ((state == STATE_RED) || (state == STATE_BLINK_RED)) ? 1 : 0;
+    end else begin
+        Q <= Q ? 1 : 0;
+    end
+end
+
+always @(posedge clk or posedge reset) begin
+    if (reset) begin
+        light           <= 2'b00;
+        timer           <= 0;
+        blink_red       <= 0;
+    end else begin
+        case(state)
+            STATE_RED       :   begin
+                timer       <= 0;
+                blink_red   <= 1;
+                light       <= 2'b10;
+            end
+            STATE_WHITE     :   begin
+                timer       <= timer + 1;
+                blink_red   <= 1;
+                light       <= 2'b01;
+                if (timer >= WALK_TIME) begin
+                    blink_flag <= 1;
+                end else begin
+                    blink_flag <= 0;
                 end
+            end
+            STATE_BLINK_RED :   begin
+                timer       <= 0;
+                blink_red   <= ~blink_red;
+                blink_flag  <= 0;
+                light       <= 2'b10;
+            end
+            default         :   begin
+                timer       <= 0;
+                blink_red   <= 1;
+                light       <= 2'b11;
+            end
         endcase
     end
 end
 
-always @(posedge grn_trffc_light or posedge clear_edge) begin
-    if (clear_edge) begin
-        green_edge <= 'b0;
-    end else begin
-        green_edge <= 'b1;
-    end
-end
-
-assign {walk_light, stop_light} = light;
+//assign {walk_light, stop_light} = light;
+assign walk_light = light[0];
+assign stop_light = light[1] & blink_red;
+assign cross_rqst = white_flag;
 
 endmodule

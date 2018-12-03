@@ -73,3 +73,9 @@ set_property IOSTANDARD LVCMOS33 [get_ports west_pedo_button]
 
 set_property PACKAGE_PIN U18 [get_ports reset_n]
 set_property IOSTANDARD LVCMOS33 [get_ports reset_n]
+
+set_property PACKAGE_PIN U3 [get_ports debug_10n_q]
+set_property IOSTANDARD LVCMOS33 [get_ports debug_10n_q]
+
+set_property PACKAGE_PIN V3 [get_ports debug_10w_q]
+set_property IOSTANDARD LVCMOS33 [get_ports debug_10w_q]
