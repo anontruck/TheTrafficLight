@@ -11,6 +11,7 @@ module two_way_intersection(
     output  wire redb_1,             // output for red light on light1
     output  wire ylwb_1,             // output for ylw light on light1
     output  wire grnb_1,             // output for grn light on light1
+<<<<<<< HEAD
     output  wire debug_10n_q,// DEBUG
     output  wire debug_10w_q,// DEBUG
     output  wire walka_0,
@@ -25,10 +26,15 @@ module two_way_intersection(
     input crosswalk_1,              // request from west crosswalk
     input reset_n,                  // active low reset
     input clk                       // posedge trigger
+=======
+    input   wire crosswalk_0,       // request from north crosswalk
+    input   wire crosswalk_1,       // request from west crosswalk
+    input   wire reset_n,           // active low reset
+    input   wire clk                // posedge trigger
+>>>>>>> parent of 0647494... Crosswalk in progress
 );
 
 parameter SHIFT = 4;
-
 
 // ----- local constants -----
 
@@ -62,6 +68,7 @@ reg [2:0] lighta_1  = 'b0;       // GYR = 3'b000
 reg [2:0] lightb_0  = 'b0;
 reg [2:0] lightb_1  = 'b0;
 
+<<<<<<< HEAD
 reg crossing_0_flag;
 reg crossing_1_flag;
 
@@ -134,6 +141,8 @@ assign debug_10w_q = crosswalk_0;
 assign cross_0_rqst = ~cross_rqst_a_0;
 assign cross_1_rqst = cross_rqst_a_1 || cross_rqst_b_1;
 
+=======
+>>>>>>> parent of 0647494... Crosswalk in progress
 // ----- state machine -----
 always @(posedge clk or posedge reset_n) begin
     if (reset_n) begin         // reset

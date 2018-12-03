@@ -32,17 +32,21 @@ output wire grn_light_nrth_s11th_st,
 output wire red_light_west_s11th_st,
 output wire ylw_light_west_s11th_st,
 output wire grn_light_west_s11th_st,
-output wire walk_light_nrth_s10th_st,
-output wire stop_light_nrth_s10th_st,
 output wire walk_light_west_s10th_st,
 output wire stop_light_west_s10th_st,
-output wire walk_light_nrth_s11th_st,
-output wire stop_light_nrth_s11th_st,
+output wire walk_light_nrth_s10th_st,
+output wire stop_light_nrth_s10th_st,
 output wire walk_light_west_s11th_st,
 output wire stop_light_west_s11th_st,
+<<<<<<< HEAD
 output wire debug_out,// DEBUG
 output  wire debug_10n_q,// DEBUG
 output  wire debug_10w_q,// DEBUG
+=======
+output wire walk_light_nrth_s11th_st,
+output wire stop_light_nrth_s11th_st,
+output wire debug_out,
+>>>>>>> parent of 0647494... Crosswalk in progress
 input wire nrth_pedo_button,
 input wire west_pedo_button,
 input wire reset_n,
@@ -120,6 +124,7 @@ two_way_intersection two_way(
     .redb_1(red_light_west_s11th_st),
     .ylwb_1(ylw_light_west_s11th_st),
     .grnb_1(grn_light_west_s11th_st),
+<<<<<<< HEAD
     .walka_0(walk_light_nrth_s10th_st),
     .stopa_0(stop_light_nrth_s10th_st),
     .walka_1(walk_light_west_s10th_st),
@@ -130,6 +135,8 @@ two_way_intersection two_way(
     .stopb_1(stop_light_west_s11th_st),
     .debug_10n_q(debug_10n_q),// DEBUG
     .debug_10w_q(debug_10w_q),// DEBUG
+=======
+>>>>>>> parent of 0647494... Crosswalk in progress
     .crosswalk_0(nrth_pedo_button),
     .crosswalk_1(west_pedo_button),
     .reset_n(reset_n),
