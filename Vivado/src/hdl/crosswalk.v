@@ -20,7 +20,6 @@
 
 
 module crosswalk(
-<<<<<<< HEAD
     output wire walk_light,
     output wire stop_light,
     output wire cross_rqst,
@@ -142,12 +141,3 @@ assign stop_light = light[1] & blink_red;
 assign cross_rqst = white_flag;
 
 endmodule
-=======
-    output reg walk_light,
-    output reg stop_light,
-    input red_trffc_light,
-    input ylw_trffc_light,
-    input clk    
-);
-endmodule
->>>>>>> parent of 0647494... Crosswalk in progress

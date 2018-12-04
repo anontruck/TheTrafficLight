@@ -11,7 +11,6 @@ module two_way_intersection(
     output  wire redb_1,             // output for red light on light1
     output  wire ylwb_1,             // output for ylw light on light1
     output  wire grnb_1,             // output for grn light on light1
-<<<<<<< HEAD
     output  wire debug_10n_q,// DEBUG
     output  wire debug_10w_q,// DEBUG
     output  wire walka_0,
@@ -26,15 +25,10 @@ module two_way_intersection(
     input crosswalk_1,              // request from west crosswalk
     input reset_n,                  // active low reset
     input clk                       // posedge trigger
-=======
-    input   wire crosswalk_0,       // request from north crosswalk
-    input   wire crosswalk_1,       // request from west crosswalk
-    input   wire reset_n,           // active low reset
-    input   wire clk                // posedge trigger
->>>>>>> parent of 0647494... Crosswalk in progress
 );
 
 parameter SHIFT = 4;
+
 
 // ----- local constants -----
 
@@ -68,7 +62,6 @@ reg [2:0] lighta_1  = 'b0;       // GYR = 3'b000
 reg [2:0] lightb_0  = 'b0;
 reg [2:0] lightb_1  = 'b0;
 
-<<<<<<< HEAD
 reg crossing_0_flag;
 reg crossing_1_flag;
 
@@ -81,58 +74,153 @@ wire not_cross_1;
 wire cross_0_rqst;
 wire cross_1_rqst;
 
-//crosswalk light module instances
-crosswalk crossa_0(
-    .walk_light(walka_0),
-    .stop_light(stopa_0),
-    .debug_q(debug_10n_q),
-    .cross_rqst(cross_rqst_a_0),
-    .red_trffc_light(reda_0),
-    .ylw_trffc_light(ylwa_0),
-    .grn_trffc_light(grna_0),
-//    .cross_button(not_cross_0),
-    .cross_button(crosswalk_0),
-    .reset(reset_n),
-    .clk(clk)
-);
-crosswalk crossa_1(
-    .walk_light(walka_1),
-    .stop_light(stopa_1),
-//    .debug_q(debug_10w_q),
-    .cross_rqst(cross_rqst_a_1),
-    .red_trffc_light(reda_1),
-    .ylw_trffc_light(ylwa_1),
-    .grn_trffc_light(grna_1),
-//    .cross_button(not_cross_1),
-    .cross_button(crosswalk_1),
-    .reset(reset_n),
-    .clk(clk)
-);
+reg [7:0] cross_timera_0  = 'b0;
+reg [7:0] cross_timera_1  = 'b0;
+reg [7:0] cross_timerb_0  = 'b0;
+reg [7:0] cross_timerb_1  = 'b0;
+reg walka_0_simp  = 'b0;
+reg stopa_0_simp  = 'b1;
+reg walka_1_simp  = 'b0;
+reg stopa_1_simp  = 'b1;
+reg walkb_0_simp  = 'b0;
+reg stopb_0_simp  = 'b1;
+reg walkb_1_simp  = 'b0;
+reg stopb_1_simp  = 'b1;
 
-crosswalk crossb_0(
-    .walk_light(walkb_0),
-    .stop_light(stopb_0),
-    .cross_rqst(cross_rqst_b_0),
-    .red_trffc_light(redb_0),
-    .ylw_trffc_light(ylwb_0),
-    .grn_trffc_light(grnb_0),
-//    .cross_button(not_cross_0),
-    .cross_button(crosswalk_0),
-    .reset(reset_n),
-    .clk(clk)
-);
-crosswalk crossb_1(
-    .walk_light(walkb_1),
-    .stop_light(stopb_1),
-    .cross_rqst(cross_rqst_b_1),
-    .red_trffc_light(redb_1),
-    .ylw_trffc_light(ylwb_1),
-    .grn_trffc_light(grnb_1),
-//    .cross_button(not_cross_1),
-    .cross_button(crosswalk_1),
-    .reset(reset_n),
-    .clk(clk)
-);
+//crosswalk light module instances
+//crosswalk crossa_0(
+//    .walk_light(walka_0),
+//    .stop_light(stopa_0),
+//    .debug_q(debug_10n_q),
+//    .cross_rqst(cross_rqst_a_0),
+//    .red_trffc_light(reda_0),
+//    .ylw_trffc_light(ylwa_0),
+//    .grn_trffc_light(grna_0),
+////    .cross_button(not_cross_0),
+//    .cross_button(crosswalk_0),
+//    .reset(reset_n),
+//    .clk(clk)
+//);
+//crosswalk crossa_1(
+//    .walk_light(walka_1),
+//    .stop_light(stopa_1),
+////    .debug_q(debug_10w_q),
+//    .cross_rqst(cross_rqst_a_1),
+//    .red_trffc_light(reda_1),
+//    .ylw_trffc_light(ylwa_1),
+//    .grn_trffc_light(grna_1),
+////    .cross_button(not_cross_1),
+//    .cross_button(crosswalk_1),
+//    .reset(reset_n),
+//    .clk(clk)
+//);
+
+//crosswalk crossb_0(
+//    .walk_light(walkb_0),
+//    .stop_light(stopb_0),
+//    .cross_rqst(cross_rqst_b_0),
+//    .red_trffc_light(redb_0),
+//    .ylw_trffc_light(ylwb_0),
+//    .grn_trffc_light(grnb_0),
+////    .cross_button(not_cross_0),
+//    .cross_button(crosswalk_0),
+//    .reset(reset_n),
+//    .clk(clk)
+//);
+//crosswalk crossb_1(
+//    .walk_light(walkb_1),
+//    .stop_light(stopb_1),
+//    .cross_rqst(cross_rqst_b_1),
+//    .red_trffc_light(redb_1),
+//    .ylw_trffc_light(ylwb_1),
+//    .grn_trffc_light(grnb_1),
+////    .cross_button(not_cross_1),
+//    .cross_button(crosswalk_1),
+//    .reset(reset_n),
+//    .clk(clk)
+//);
+
+//simple ped lights (on when green, off when red or yellow)
+assign walka_0 = walka_0_simp;
+assign stopa_0 = stopa_0_simp;
+
+assign walka_1 = walka_1_simp;
+assign stopa_1 = stopa_1_simp;
+
+assign walkb_0 = walkb_0_simp;
+assign stopb_0 = stopb_0_simp;
+
+assign walkb_1 = walkb_1_simp;
+assign stopb_1 = stopb_1_simp;
+
+always @(posedge clk) begin
+    // 10th street
+    if (state_a == STATE_GRN_RED) begin
+        if (cross_timera_0 <=7) begin
+            walka_0_simp <= 'b1;
+            stopa_0_simp <= 'b0;
+            cross_timera_0 = cross_timera_0 + 1;
+        end else begin
+            walka_0_simp <= 'b0;
+            stopa_0_simp <= ~stopa_0_simp;
+        end
+    end
+    else begin
+        walka_0_simp <= 'b0;
+        stopa_0_simp <= 'b1;
+        cross_timera_0 <= 'b0;
+    end
+    
+    if (state_a == STATE_RED_GRN) begin
+        if (cross_timera_1 <=7) begin
+            walka_1_simp <= 'b1;
+            stopa_1_simp <= 'b0;
+            cross_timera_1 = cross_timera_1 + 1;
+        end else begin
+            walka_1_simp <= 'b0;
+            stopa_1_simp <= ~stopa_1_simp;
+        end
+    end
+    else begin
+        walka_1_simp <= 'b0;
+        stopa_1_simp <= 'b1;
+        cross_timera_1 <= 'b0;
+    end
+    
+    // 11th street
+    if (state_b == STATE_GRN_RED) begin
+        if (cross_timerb_0 <=7) begin
+            walkb_0_simp <= 'b1;
+            stopb_0_simp <= 'b0;
+            cross_timerb_0 = cross_timerb_0 + 1;
+        end else begin
+            walkb_0_simp <= 'b0;
+            stopb_0_simp <= ~stopb_0_simp;
+        end
+    end
+    else begin
+        walkb_0_simp <= 'b0;
+        stopb_0_simp <= 'b1;
+        cross_timerb_0 <= 'b0;
+    end
+    
+    if (state_b == STATE_RED_GRN) begin
+        if (cross_timerb_1 <=7) begin
+            walkb_1_simp <= 'b1;
+            stopb_1_simp <= 'b0;
+            cross_timerb_1 = cross_timerb_1 + 1;
+        end else begin
+            walkb_1_simp <= 'b0;
+            stopb_1_simp <= ~stopb_1_simp;
+        end
+    end
+    else begin
+        walkb_1_simp <= 'b0;
+        stopb_1_simp <= 'b1;
+        cross_timerb_1 <= 'b0;
+    end
+end
+
 
 assign debug_10w_q = crosswalk_0;
 
@@ -141,8 +229,6 @@ assign debug_10w_q = crosswalk_0;
 assign cross_0_rqst = ~cross_rqst_a_0;
 assign cross_1_rqst = cross_rqst_a_1 || cross_rqst_b_1;
 
-=======
->>>>>>> parent of 0647494... Crosswalk in progress
 // ----- state machine -----
 always @(posedge clk or posedge reset_n) begin
     if (reset_n) begin         // reset
@@ -156,7 +242,7 @@ always @(posedge clk or posedge reset_n) begin
             STATE_GRN_RED : begin
                 lighta_0 <= GRN_MSK;
                 lighta_1 <= RED_MSK;
-                if (!crosswalk_0 && (timer <= SLOWDOWN) && (timer >= SHIFT)) begin
+                if (!crosswalk_1 && (timer <= SLOWDOWN) && (timer >= SHIFT)) begin
 //                if (cross_0_rqst && (timer <= SLOWDOWN) && (timer >= SHIFT)) begin
                     timer <= (timer + SLOWDOWN);
                 end else if (timer >= GRN_TON) begin
@@ -180,7 +266,7 @@ always @(posedge clk or posedge reset_n) begin
             STATE_RED_GRN : begin
                 lighta_0 <= RED_MSK;
                 lighta_1 <= GRN_MSK;
-                if (!crosswalk_1 && (timer <= (T_CYCLE + SLOWDOWN)) && (timer >= T_CYCLE)) begin
+                if (!crosswalk_0 && (timer <= (T_CYCLE + SLOWDOWN)) && (timer >= T_CYCLE)) begin
 //                if (cross_1_rqst && (timer <= (T_CYCLE + SLOWDOWN)) && (timer >= T_CYCLE)) begin
                     timer <= (timer + SLOWDOWN);
                 end else if (timer >= (T_CYCLE + GRN_TON)) begin
