@@ -1,3 +1,11 @@
+//////////////////////////////////////////////////////////////////////////////////
+// Group: 6 
+// Engineer: Zach, Tristan, Chris, Yazid, & Anthony
+// 
+// Two intersection traffic light controller, intersection controller module
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
 module two_way_intersection(
     output  wire reda_0,             // output for red light on light0
     output  wire ylwa_0,             // output for yle light on light0
@@ -86,59 +94,6 @@ reg walkb_0_simp  = 'b0;
 reg stopb_0_simp  = 'b1;
 reg walkb_1_simp  = 'b0;
 reg stopb_1_simp  = 'b1;
-
-//crosswalk light module instances
-//crosswalk crossa_0(
-//    .walk_light(walka_0),
-//    .stop_light(stopa_0),
-//    .debug_q(debug_10n_q),
-//    .cross_rqst(cross_rqst_a_0),
-//    .red_trffc_light(reda_0),
-//    .ylw_trffc_light(ylwa_0),
-//    .grn_trffc_light(grna_0),
-////    .cross_button(not_cross_0),
-//    .cross_button(crosswalk_0),
-//    .reset(reset_n),
-//    .clk(clk)
-//);
-//crosswalk crossa_1(
-//    .walk_light(walka_1),
-//    .stop_light(stopa_1),
-////    .debug_q(debug_10w_q),
-//    .cross_rqst(cross_rqst_a_1),
-//    .red_trffc_light(reda_1),
-//    .ylw_trffc_light(ylwa_1),
-//    .grn_trffc_light(grna_1),
-////    .cross_button(not_cross_1),
-//    .cross_button(crosswalk_1),
-//    .reset(reset_n),
-//    .clk(clk)
-//);
-
-//crosswalk crossb_0(
-//    .walk_light(walkb_0),
-//    .stop_light(stopb_0),
-//    .cross_rqst(cross_rqst_b_0),
-//    .red_trffc_light(redb_0),
-//    .ylw_trffc_light(ylwb_0),
-//    .grn_trffc_light(grnb_0),
-////    .cross_button(not_cross_0),
-//    .cross_button(crosswalk_0),
-//    .reset(reset_n),
-//    .clk(clk)
-//);
-//crosswalk crossb_1(
-//    .walk_light(walkb_1),
-//    .stop_light(stopb_1),
-//    .cross_rqst(cross_rqst_b_1),
-//    .red_trffc_light(redb_1),
-//    .ylw_trffc_light(ylwb_1),
-//    .grn_trffc_light(grnb_1),
-////    .cross_button(not_cross_1),
-//    .cross_button(crosswalk_1),
-//    .reset(reset_n),
-//    .clk(clk)
-//);
 
 //simple ped lights (on when green, off when red or yellow)
 assign walka_0 = walka_0_simp;
